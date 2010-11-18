@@ -1,0 +1,26 @@
+Source code for "Designing a Concurrent Application". The layout
+follows the standard OTP Design Principles.
+
+The ebin/ directory is where files will go once they are compiled. The
+include/ directory is used to store .hrl files that are to be included
+by other applications; the private .hrl files are usually just kept
+inside the src/ directory. The priv/ directory is used for executables
+that might have to interact with Erlang, such as specific drivers and
+whatnot. Then the last one is the src/ directory, where all .erl files
+stay.
+
+In standard Erlang projects, this directory structure can vary a
+little. A conf/ directory can be added for specific configuration
+files, doc/ for documentation and lib/ for third party libraries
+required for your application to run.
+
+By going in your command line and running erl -make, the files should
+all be compiled and put inside the ebin/ directory for you. Start the
+Erlang shell by doing erl -pa ebin/. The -pa <directory> option tells
+the Erlang VM to add that path to the places it can look in for
+modules.
+
+Another option is to start the shell as usual and call
+make:all([load]). This will look for a file named 'Emakefile' in the
+current directory, recompile it (if it changed) and load the new
+files.
