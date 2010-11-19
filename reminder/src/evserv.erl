@@ -128,6 +128,19 @@ loop(S=#state{}) ->
             exit(shutdown);
         {'DOWN', Ref, process, _Pid, _Reason} ->
             loop(S#state{clients=orddict:erase(Ref, S#state.clients)});
+%% In order to do hot code loading, Erlang has a thing called the code
+%% server. The code server can hold two versions of a single module in
+%% memory, and both versions can run at once. A new version of a
+%% module is automatically loaded when compiling it with c(Module),
+%% loading with l(Module) or loading it with one of the many functions
+%% of the code module.
+%%
+%% When there are two versions of a module loaded in the VM, all local
+%% calls are done through the currently running version in a
+%% process. However, external calls are always done on the newest version
+%% of the code available in the code server. Then, if local calls are
+%% made from within the external one, they are in the new version of the
+%% code.
         code_change ->
             ?MODULE:loop(S);
         {Pid, debug} -> %% used as a hack to let me do some unit testing

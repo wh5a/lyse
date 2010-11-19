@@ -1,3 +1,8 @@
+%% A generic restarter. It can take any module, as long as it has a
+%% start_link function. It will restart the process it watches
+%% indefinitely, unless the supervisor itself is terminated with a
+%% shutdown exit signal.
+
 -module(sup).
 -export([start/2, start_link/2, init/1, loop/1]).
 
@@ -17,6 +22,6 @@ loop({M,F,A}) ->
         {'EXIT', Pid, Reason} ->
             io:format("Process ~p exited for reason ~p~n",[Pid,Reason]),
             loop({M,F,A});
-        {'EXIT', _From, shutdown} ->
+        {'EXIT', _, shutdown} ->
             exit(shutdown) % will kill the child too
     end.
